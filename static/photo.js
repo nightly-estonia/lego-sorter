@@ -106,15 +106,91 @@ const LEGOPhoto = {
         });
     },
 
-    async predict(photo, kind) {
+    findParts(image) {
+        const scale = Math.min(1, 640 / Math.max(image.naturalWidth, image.naturalHeight));
+        const canvas = document.createElement("canvas");
+        const width = canvas.width = Math.round(image.naturalWidth * scale);
+        const height = canvas.height = Math.round(image.naturalHeight * scale);
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        context.drawImage(image, 0, 0, width, height);
+        return this.partBoxes(context.getImageData(0, 0, width, height).data, width, height);
+    },
+
+    partBoxes(pixels, width, height) {
+        const patch = Math.max(1, Math.round(Math.min(width, height) * 0.04));
+        const corners = [[0, 0], [width - patch, 0], [0, height - patch], [width - patch, height - patch]];
+        const channels = [[], [], []];
+        for (const [left, top] of corners) {
+            for (let y = top; y < top + patch; y++) {
+                for (let x = left; x < left + patch; x++) {
+                    const offset = (y * width + x) * 4;
+                    for (let channel = 0; channel < 3; channel++) channels[channel].push(pixels[offset + channel]);
+                }
+            }
+        }
+        const [red, green, blue] = channels.map(values => values.sort((a, b) => a - b)[values.length >> 1]);
+        const mask = new Uint8Array(width * height);
+        for (let index = 0; index < mask.length; index++) {
+            const offset = index * 4;
+            const distance = (pixels[offset] - red) ** 2
+                + (pixels[offset + 1] - green) ** 2 + (pixels[offset + 2] - blue) ** 2;
+            mask[index] = distance > 48 ** 2;
+        }
+
+        const queue = new Int32Array(mask.length);
+        const minimumArea = Math.max(20, mask.length * 0.0007);
+        const boxes = [];
+        for (let start = 0; start < mask.length; start++) {
+            if (!mask[start]) continue;
+            mask[start] = 0;
+            let end = 1;
+            queue[0] = start;
+            let left = width, right = 0, top = height, bottom = 0;
+            for (let head = 0; head < end; head++) {
+                const pixel = queue[head];
+                const x = pixel % width;
+                const y = Math.floor(pixel / width);
+                left = Math.min(left, x);
+                right = Math.max(right, x + 1);
+                top = Math.min(top, y);
+                bottom = Math.max(bottom, y + 1);
+                if (x > 0 && mask[pixel - 1]) { mask[pixel - 1] = 0; queue[end++] = pixel - 1; }
+                if (x + 1 < width && mask[pixel + 1]) { mask[pixel + 1] = 0; queue[end++] = pixel + 1; }
+                if (y > 0 && mask[pixel - width]) { mask[pixel - width] = 0; queue[end++] = pixel - width; }
+                if (y + 1 < height && mask[pixel + width]) { mask[pixel + width] = 0; queue[end++] = pixel + width; }
+            }
+            const boxWidth = right - left;
+            const boxHeight = bottom - top;
+            if (end < minimumArea || boxWidth < 6 || boxHeight < 6
+                || end < boxWidth * boxHeight * 0.2 || end > mask.length * 0.75) continue;
+            boxes.push({ left: left / width, right: right / width, top: top / height, bottom: bottom / height, area: end });
+        }
+        boxes.sort((a, b) => b.area - a.area);
+        return boxes.slice(0, 15).sort((a, b) => a.top - b.top || a.left - b.left);
+    },
+
+    async predictPart(image, box, signal) {
+        const width = image.naturalWidth;
+        const height = image.naturalHeight;
+        const pad = Math.max(8, Math.min((box.right - box.left) * width, (box.bottom - box.top) * height) * 0.15);
+        const left = Math.max(0, box.left * width - pad);
+        const top = Math.max(0, box.top * height - pad);
+        const cropWidth = Math.min(width, box.right * width + pad) - left;
+        const cropHeight = Math.min(height, box.bottom * height + pad) - top;
+        const crop = await this.jpeg(image, left, top, cropWidth, cropHeight, Math.min(1, 800 / Math.max(cropWidth, cropHeight)));
+        return this.predict(crop, "parts", signal);
+    },
+
+    async predict(photo, kind, signal) {
         const body = new FormData();
         body.append("query_image", photo, "lego.jpg");
+        const timeout = AbortSignal.timeout(35000);
         let response;
         try {
             response = await fetch(`https://api.brickognize.com/predict/${kind}/?top_k_items=8`, {
                 method: "POST",
                 body,
-                signal: AbortSignal.timeout(35000),
+                signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
             });
         } catch {
             throw Error("Brickognize’i tuvastusteenus ei vasta. Proovi uuesti.");

@@ -8,7 +8,7 @@ Fotopõhine LEGO City komplektide taastamise veebirakendus.
 2. Vali foto või vajuta „Tee foto”, luba brauseril kaamerat kasutada ja vajuta eelvaates „Pildista”. Pildista karbi esikülge või valmis mudelit.
 3. Vajuta „Tuvasta komplekt” ja vali Brickognize’i pakutud vastetest sobiv komplekt.
 4. Sisesta [Rebrickable’i API võti](https://rebrickable.com/api/). Pärast komplekti valimist laadib rakendus vajalike detailide loendi koos värvide ja kogustega. Komplekti numbri (näiteks `60337`) saab ka käsitsi sisestada.
-5. Üksikute osade võrdlemiseks laota klotsid üksteisest eraldi. GitHub Pagesis puuduta fotol soovitud klotse ja vajuta „Tuvasta märgitud klotsid”. FastAPI vaates vajuta „Skaneeri klotsid”.
+5. Üksikute osade tuvastamiseks laota kuni 15 klotsi üksteisest eraldi kontrastsele ühevärvilisele taustale. GitHub Pages leiab fotolt klotside asukohad ja alustab tuvastust automaatselt. FastAPI vaates vajuta „Skaneeri klotsid”.
 6. Kontrolli pakutud detaili kuju ja värvi enne kogutuks märkimist. Kogused jäävad brauseri salvestusse.
 
 Komplekti tuvastus annab võimalikud vasted. Lahtiste klotside või nummerdamata koti pildistamisel kasuta teadaolevat komplekti numbrit ja võrdle üksikuid klotse selle loendiga. Kui brauser ei suuda HEIC-fotot avada, proovi JPG- või PNG-faili.
