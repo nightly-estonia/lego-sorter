@@ -163,10 +163,35 @@ const LEGOPhoto = {
             const boxHeight = bottom - top;
             if (end < minimumArea || boxWidth < 6 || boxHeight < 6
                 || end < boxWidth * boxHeight * 0.2 || end > mask.length * 0.75) continue;
-            boxes.push({ left: left / width, right: right / width, top: top / height, bottom: bottom / height, area: end });
+            const samples = [[], [], []];
+            for (let index = 0; index < end; index += Math.max(1, Math.floor(end / 256))) {
+                const offset = queue[index] * 4;
+                for (let channel = 0; channel < 3; channel++) samples[channel].push(pixels[offset + channel]);
+            }
+            const rgb = samples.map(values => values.sort((a, b) => a - b)[values.length >> 1]);
+            boxes.push({ rgb, left: left / width, right: right / width, top: top / height, bottom: bottom / height, area: end });
         }
         boxes.sort((a, b) => b.area - a.area);
         return boxes.slice(0, 15).sort((a, b) => a.top - b.top || a.left - b.left);
+    },
+
+    lab(rgb) {
+        const [r, g, b] = rgb.map(value => {
+            const channel = value / 255;
+            return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
+        const [x, y, z] = [
+            (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047,
+            r * 0.2126 + g * 0.7152 + b * 0.0722,
+            (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883,
+        ].map(value => value > 0.008856 ? Math.cbrt(value) : 7.787 * value + 16 / 116);
+        return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+    },
+
+    colorDistance(observed, hex) {
+        if (!/^[0-9a-f]{6}$/i.test(hex || "")) return Infinity;
+        const reference = this.lab(hex.match(/../g).map(channel => parseInt(channel, 16)));
+        return Math.hypot((observed[0] - reference[0]) * 0.8, observed[1] - reference[1], observed[2] - reference[2]);
     },
 
     async predictPart(image, box, signal) {

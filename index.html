@@ -1,32 +1,33 @@
 <!doctype html>
 <html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10191b"><title>LEGO Sorter</title>
 <style>
-*{box-sizing:border-box}body{font:15px -apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#0c1518;color:#ecf7f1;margin:0}main{max-width:1050px;margin:auto;padding:20px 14px 65px}header{display:flex;align-items:center;justify-content:space-between}header strong{font-size:21px}header b{background:#c1f25a;color:#172519;border-radius:10px;padding:8px}header small{border:1px solid #405459;border-radius:20px;padding:7px;color:#bbcec7}h1{font-size:clamp(28px,5vw,44px);line-height:1.08;letter-spacing:-1px;margin:26px 0 10px}p{line-height:1.5}.muted,.hint{color:#a8bcb5}.hint{font-size:12px}.layout{display:grid;grid-template-columns:minmax(270px,350px) minmax(0,1fr);gap:16px;margin-top:20px}.panel{background:#162629;border:1px solid #34474a;border-radius:16px;padding:17px;margin-bottom:16px}h2{font-size:17px;margin:0 0 14px}.step{background:#c1f25a;color:#18251d;padding:4px 8px;border-radius:6px;margin-right:7px}label{display:block;color:#c5d5ce;font-size:13px;margin:12px 0 5px}input,select{width:100%;font:inherit;padding:11px;background:#0e1b1e;color:#fff;border:1px solid #465d60;border-radius:10px}button{font:inherit;cursor:pointer;background:#c1f25a;color:#14241c;font-weight:750;border:0;border-radius:9px;padding:10px 12px}.secondary{background:#304548;color:#f0fbf5}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.item{background:#263b3e;width:100%;text-align:left;color:#eff7f2;margin:4px 0;font-size:13px}.item.active{outline:2px solid #c1f25a}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stats div{padding:10px;background:#263a3c;border-radius:9px}.stats b{font-size:20px;display:block}.stats small{font-size:11px;color:#b6c5c0}.progress{height:7px;background:#374b4d;overflow:hidden;border-radius:6px;margin:10px 0}.progress div{height:100%;background:#c1f25a}.part{display:flex;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid #36484b}.part .name{flex:1;min-width:0;font-size:12px}.part small{display:block;color:#abc0b7}.part button{padding:6px 9px;background:#30474b;color:white}.scroll{max-height:370px;overflow:auto}.upload{cursor:pointer;border:2px dashed #567569;border-radius:12px;padding:25px;text-align:center}.upload input{display:none}.photo{position:relative;margin-top:12px;touch-action:manipulation}.photo img{display:block;width:100%;border-radius:10px}.pin{position:absolute;transform:translate(-50%,-50%);min-width:31px;min-height:31px;border-radius:50%;padding:5px;background:#ffd17c;border:2px solid #102323;color:#16201d;font-size:12px}.pin.ok{background:#c1f25a}.result{background:#23383b;border:1px solid #49615d;border-radius:12px;padding:12px;margin:9px 0}.result strong{display:block;margin-bottom:6px}.result select{margin:6px 0}.hidden{display:none}.error{color:#ffc4c4}.status{font-size:13px;color:#ffdb90}a{color:#c1f25a}@media(max-width:740px){.layout{grid-template-columns:1fr}.panel{padding:14px}}
+*{box-sizing:border-box}body{font:15px -apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#0c1518;color:#ecf7f1;margin:0}main{max-width:1050px;margin:auto;padding:20px 14px 65px}header{display:flex;align-items:center;justify-content:space-between}header strong{font-size:21px}header b{background:#c1f25a;color:#172519;border-radius:10px;padding:8px}header small{border:1px solid #405459;border-radius:20px;padding:7px;color:#bbcec7}h1{font-size:clamp(28px,5vw,44px);line-height:1.08;letter-spacing:-1px;margin:26px 0 10px}p{line-height:1.5}.muted,.hint{color:#a8bcb5}.hint{font-size:12px}.layout{display:grid;grid-template-columns:minmax(270px,350px) minmax(0,1fr);gap:16px;margin-top:20px}.panel{background:#162629;border:1px solid #34474a;border-radius:16px;padding:17px;margin-bottom:16px}h2{font-size:17px;margin:0 0 14px}.step{background:#c1f25a;color:#18251d;padding:4px 8px;border-radius:6px;margin-right:7px}label{display:block;color:#c5d5ce;font-size:13px;margin:12px 0 5px}input,select{width:100%;font:inherit;padding:11px;background:#0e1b1e;color:#fff;border:1px solid #465d60;border-radius:10px}button{font:inherit;cursor:pointer;background:#c1f25a;color:#14241c;font-weight:750;border:0;border-radius:9px;padding:10px 12px}.secondary{background:#304548;color:#f0fbf5}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.item{background:#263b3e;width:100%;text-align:left;color:#eff7f2;margin:4px 0;font-size:13px}.item.active{outline:2px solid #c1f25a}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stats div{padding:10px;background:#263a3c;border-radius:9px}.stats b{font-size:20px;display:block}.stats small{font-size:11px;color:#b6c5c0}.progress{height:7px;background:#374b4d;overflow:hidden;border-radius:6px;margin:10px 0}.progress div{height:100%;background:#c1f25a}.part{display:flex;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid #36484b}.part .name{flex:1;min-width:0;font-size:12px}.part small{display:block;color:#abc0b7}.part button{padding:6px 9px;background:#30474b;color:white}.scroll{max-height:370px;overflow:auto}.upload{cursor:pointer;border:2px dashed #567569;border-radius:12px;padding:25px;text-align:center}.upload input{display:none}.photo{position:relative;margin-top:12px;touch-action:manipulation}.photo img{display:block;width:100%;border-radius:10px}.pin{position:absolute;border:3px solid #85f54a;border-radius:5px;background:transparent;color:#16201d;padding:0;box-shadow:0 0 0 1px #183714,inset 0 0 0 1px #183714}.pin span{position:absolute;top:0;left:0;padding:2px 4px;background:#85f54a;border-radius:0 0 4px 0;font-size:12px}.result{background:#23383b;border:1px solid #49615d;border-radius:12px;padding:12px;margin:9px 0}.result strong{display:block;margin-bottom:6px}.result select{margin:6px 0}.hidden{display:none}.error{color:#ffc4c4}.status{font-size:13px;color:#ffdb90}a{color:#c1f25a}@media(max-width:740px){.layout{grid-template-columns:1fr}.panel{padding:14px}}
 </style></head>
 <body><main><header><strong><b>▦</b> LEGO SORTER</strong><small>GITHUB PAGES</small></header><h1>Leia õige klots.<br>Taasta oma komplekt.</h1><p class="muted">Vali komplekt, lisa detailide loend, pildista klotse ja märgi sobivad osad. Andmed säilivad sinu telefoni brauseris.</p>
 <div class="layout"><aside><section class="panel"><h2><span class="step">1</span> Komplektid</h2><label>Rebrickable API võti</label><input id="apiKey" type="password" placeholder="Tasuta API võti"><p class="hint">Võtme saad <a href="https://rebrickable.com/api/" target="_blank" rel="noopener">Rebrickable API lehelt</a>. Seda ei avaldata GitHubis.</p><label>Komplekti number</label><input id="num" inputmode="numeric" placeholder="60337"><label>Komplekti nimi (valikuline)</label><input id="title" placeholder="Reisirong"><div class="buttons"><button id="add">Laadi komplekt ja detailid</button><button class="secondary" id="export">Varunda</button></div><div id="sets"></div><label>Taasta varukoopia</label><input id="backup" type="file" accept=".json,application/json"></section>
 <section class="panel"><h2><span class="step">2</span> Detailid</h2><div id="summary" class="hint">Vali komplekt.</div><label>Impordi detailide nimekiri (CSV / JSON)</label><input id="inventory" type="file" accept=".csv,.json,text/csv,application/json"><p class="hint">CSV veerud: part_num, color_id, quantity, name. Rebrickable'i CSV Part, Color, Quantity on samuti sobiv.</p><label>Lisa detail käsitsi</label><input id="part" placeholder="Klotsi number / ID"><label>Värv</label><input id="color" placeholder="Värvi number või nimi"><label>Kogus</label><input id="qty" type="number" min="1" value="1"><div class="buttons"><button id="addPart">Lisa detail</button></div><div class="scroll" id="parts"></div></section></aside>
-<section><div class="panel"><h2><span class="step">3</span> Pildista</h2><p class="hint">Komplekti otsimiseks pildista karbi esikülge või valmis mudelit. Klotside tuvastamiseks laota kuni 15 klotsi üksteisest eraldi kontrastsele ühevärvilisele taustale.</p><div class="buttons"><label class="upload" style="flex:1;margin:0">📁 Vali foto<input id="file" type="file" accept="image/*"></label><button type="button" id="camera" class="secondary">Tee foto</button></div><div id="cameraPreview" class="hidden"><video id="cameraVideo" autoplay muted playsinline aria-label="Kaamera eelvaade" style="display:block;width:100%;max-height:65vh"></video><div class="buttons"><button type="button" id="takePhoto" disabled>Pildista</button><button type="button" id="closeCamera" class="secondary">Sulge kaamera</button></div></div><div id="photoBlock" class="hidden"><div class="photo" id="photo"><img id="image" alt="Klotside foto"></div><div class="buttons"><button id="clear" class="secondary">Eemalda foto</button><button id="ai" class="secondary">Skaneeri klotsid uuesti</button><button id="identifySet">Tuvasta komplekt</button></div></div><div id="setMatches" class="buttons"></div><p class="hint">Tuvastamiseks saadetakse pilt Brickognize’ile.</p><p id="status" class="status" aria-live="polite"></p><p id="scanStatus" class="status" aria-live="polite"></p></div><div class="panel"><h2>Leitud klotsid</h2><div id="pins" class="hint">Tuvastatud klotsid ilmuvad siia.</div></div></section></div></main>
-<script src="static/photo.js?v=3"></script>
+<section><div class="panel"><h2><span class="step">3</span> Pildista</h2><p class="hint">Komplekti otsimiseks pildista karbi esikülge või valmis mudelit. Klotside tuvastamiseks laota kuni 15 klotsi üksteisest eraldi kontrastsele ühevärvilisele taustale.</p><div class="buttons"><label class="upload" style="flex:1;margin:0">📁 Vali foto<input id="file" type="file" accept="image/*"></label><button type="button" id="camera" class="secondary">Tee foto</button></div><div id="cameraPreview" class="hidden"><video id="cameraVideo" autoplay muted playsinline aria-label="Kaamera eelvaade" style="display:block;width:100%;max-height:65vh"></video><div class="buttons"><button type="button" id="takePhoto" disabled>Pildista</button><button type="button" id="closeCamera" class="secondary">Sulge kaamera</button></div></div><div id="photoBlock" class="hidden"><div class="photo" id="photo"><img id="image" alt="Klotside foto"></div><div class="buttons"><button id="clear" class="secondary">Eemalda foto</button><button id="ai" class="secondary">Skaneeri klotsid uuesti</button><button id="identifySet">Tuvasta komplekt</button></div></div><div id="setMatches" class="buttons"></div><p class="hint">Tuvastamiseks saadetakse pilt Brickognize’ile.</p><p id="status" class="status" aria-live="polite"></p><p id="scanStatus" class="status" aria-live="polite"></p></div><div class="panel"><h2>Komplektile vajalikud klotsid</h2><div id="pins" class="hint">Vali komplekt ja lisa klotsidest foto.</div></div></section></div></main>
+<script src="static/photo.js?v=4"></script>
 <script>
 const $=id=>document.getElementById(id),STORE="lego_sorter_pages_v1";
 let data;try{data=JSON.parse(localStorage.getItem(STORE))}catch(e){}
-if(!data||!data.sets)data={sets:{},active:"",pins:[]};let photoURL=null,chosenFile=null,photoVersion=0,partScan;
+if(!data||!data.sets)data={sets:{},active:"",pins:[]};let photoURL=null,chosenFile=null,photoVersion=0,partScan,colorRequest;
+const collectedBoxes = new Set();
 data.pins = [];
 function save(){try{localStorage.setItem(STORE,JSON.stringify(data))}catch(e){message("Salvestusruum täis; kasuta varundust.",true)}}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function message(s,bad=false){$("status").className=bad?"error":"status";$("status").textContent=s}
 function current(){return data.sets[data.active]}function partId(p){return String(p.part_num)+"|"+String(p.color_id)}
-function standard(p){return {part_num:String(p.part_num??p.Part??p.part??p.id??"").trim(),color_id:String(p.color_id??p.Color??p.color??"").trim(),name:String(p.name??p.Name??""),quantity:Math.max(1,Number(p.quantity??p.Quantity??p.qty??1)||1),got:Math.max(0,Number(p.got)||0)}}
+function standard(p){return {part_num:String(p.part_num??p.Part??p.part??p.id??"").trim(),color_id:String(p.color_id??p.Color??p.color??"").trim(),name:String(p.name??p.Name??""),rgb:String(p.rgb??""),transparent:Boolean(p.transparent),quantity:Math.max(1,Number(p.quantity??p.Quantity??p.qty??1)||1),got:Math.max(0,Number(p.got)||0)}}
 function csv(text){let rows=[],row=[],f="",q=false;for(let i=0;i<text.length;i++){let c=text[i];if(c==='"'){if(q&&text[i+1]==='"'){f+='"';i++}else q=!q}else if(c===","&&!q){row.push(f);f=""}else if((c==="\n"||c==="\r")&&!q){if(c==="\r"&&text[i+1]==="\n")i++;row.push(f);if(row.some(x=>x.trim()))rows.push(row);row=[];f=""}else f+=c}row.push(f);if(row.some(x=>x.trim()))rows.push(row);let heads=(rows.shift()||[]).map(s=>s.toLowerCase().trim().replace(/[^a-z0-9]/g,""));return rows.map(r=>{let lookup=(...names)=>{for(let n of names){let i=heads.indexOf(n);if(i>=0)return r[i]}return""};return standard({part_num:lookup("partnum","part","partid"),color_id:lookup("colorid","color","colour"),name:lookup("name","partname"),quantity:lookup("quantity","qty","count")})}).filter(p=>p.part_num)}
-function render(){let s=current();$("sets").innerHTML=Object.entries(data.sets).map(([n,v])=>'<button class="item '+(n===data.active?"active":"")+'" data-set="'+esc(n)+'">'+esc(n)+" · "+esc(v.name)+"</button>").join("");$("sets").querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>{data.active=b.dataset.set;rematchParts();save();render()});if(!s){$("summary").textContent="Lisa või vali komplekt."; $("parts").innerHTML="";drawPins();return}let total=s.parts.reduce((a,p)=>a+p.quantity,0),got=s.parts.reduce((a,p)=>a+Math.min(p.got,p.quantity),0);$("summary").innerHTML="<strong>"+esc(s.name)+'</strong><div class="stats"><div><b>'+got+'</b><small>Kogutud</small></div><div><b>'+(total-got)+'</b><small>Puudu</small></div><div><b>'+Math.round(100*got/Math.max(1,total))+'%</b><small>Valmis</small></div></div><div class="progress"><div style="width:'+Math.round(100*got/Math.max(1,total))+'%"></div></div>';$("parts").innerHTML=s.parts.map((p,i)=>'<div class="part"><div class="name"><b>'+esc(p.part_num)+'</b> · '+esc(p.color_id)+'<small>'+esc(p.name)+'</small></div><button data-minus="'+i+'">−</button><small>'+p.got+'/'+p.quantity+'</small><button data-plus="'+i+'">+</button></div>').join("");$("parts").querySelectorAll("[data-plus],[data-minus]").forEach(b=>b.onclick=()=>{let ix=Number(b.dataset.plus??b.dataset.minus),p=s.parts[ix];p.got=Math.max(0,Math.min(p.quantity,p.got+(b.hasAttribute("data-plus")?1:-1)));save();render()});drawPins()}
+function render(){let s=current();$("sets").innerHTML=Object.entries(data.sets).map(([n,v])=>'<button class="item '+(n===data.active?"active":"")+'" data-set="'+esc(n)+'">'+esc(n)+" · "+esc(v.name)+"</button>").join("");$("sets").querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>{data.active=b.dataset.set;save();render();scanSelectedSet()});if(!s){$("summary").textContent="Lisa või vali komplekt."; $("parts").innerHTML="";drawPins();return}let total=s.parts.reduce((a,p)=>a+p.quantity,0),got=s.parts.reduce((a,p)=>a+Math.min(p.got,p.quantity),0);$("summary").innerHTML="<strong>"+esc(s.name)+'</strong><div class="stats"><div><b>'+got+'</b><small>Kogutud</small></div><div><b>'+(total-got)+'</b><small>Puudu</small></div><div><b>'+Math.round(100*got/Math.max(1,total))+'%</b><small>Valmis</small></div></div><div class="progress"><div style="width:'+Math.round(100*got/Math.max(1,total))+'%"></div></div>';$("parts").innerHTML=s.parts.map((p,i)=>'<div class="part"><div class="name"><b>'+esc(p.part_num)+'</b> · '+esc(p.color_id)+'<small>'+esc(p.name)+'</small></div><button data-minus="'+i+'">−</button><small>'+p.got+'/'+p.quantity+'</small><button data-plus="'+i+'">+</button></div>').join("");$("parts").querySelectorAll("[data-plus],[data-minus]").forEach(b=>b.onclick=()=>{let ix=Number(b.dataset.plus??b.dataset.minus),p=s.parts[ix];p.got=Math.max(0,Math.min(p.quantity,p.got+(b.hasAttribute("data-plus")?1:-1)));save();render()});drawPins()}
 $("apiKey").value=localStorage.getItem("lego_rb_key")||"";
 $("apiKey").oninput=()=>localStorage.setItem("lego_rb_key",$("apiKey").value.trim());
 async function rb(path,key){let res;try{res=await fetch("https://rebrickable.com/api/v3/lego"+path,{headers:{"Authorization":"key "+key},signal:AbortSignal.timeout(20000)})}catch(e){throw Error("Rebrickable ei vasta. Proovi uuesti.")}if (res.status === 401 || res.status === 403) throw Error("Kontrolli Rebrickable API võtit.");
 if (res.status === 404) throw Error("Komplekti ei leitud Rebrickable’ist.");
 if (res.status === 429) throw Error("Rebrickable’i päringulimiit täitus. Proovi veidi hiljem.");
 if (!res.ok) throw Error("Rebrickable HTTP " + res.status);return res.json()}
-async function loadSet(n){let num=n.trim();if(!/^\d{3,8}(?:-\d+)?$/.test(num))throw Error("Vigane komplekti number.");let key=$("apiKey").value.trim();if(!key)throw Error("Sisesta kõigepealt Rebrickable API võti.");let no=num.includes("-")?num:num+"-1",info=await rb("/sets/"+no+"/",key),parts=[],page=1;while(page<=20){let d=await rb("/sets/"+no+"/parts/?page_size=1000&page="+page+"&inc_minifig_parts=1",key);for(let x of d.results||[]){if(x.is_spare)continue;parts.push(standard({part_num:x.part?.part_num,color_id:x.color?.id,name:(x.part?.name||"")+" · "+(x.color?.name||""),quantity:x.quantity}))}if(!d.next)break;page++}let merged=new Map();for(let p of parts){let k=partId(p),old=merged.get(k);if(old)old.quantity+=p.quantity;else merged.set(k,p)}let previous=data.sets[no];if(previous){for(let p of merged.values()){let old=previous.parts.find(o=>partId(o)===partId(p));if(old)p.got=Math.min(old.got,p.quantity)}}data.sets[no]={name:info.name,parts:[...merged.values()]};data.active=no;rematchParts();save();render();return no}
+async function loadSet(n){let num=n.trim();if(!/^\d{3,8}(?:-\d+)?$/.test(num))throw Error("Vigane komplekti number.");let key=$("apiKey").value.trim();if(!key)throw Error("Sisesta kõigepealt Rebrickable API võti.");let no=num.includes("-")?num:num+"-1",info=await rb("/sets/"+no+"/",key),parts=[],page=1;while(page<=20){let d=await rb("/sets/"+no+"/parts/?page_size=1000&page="+page+"&inc_minifig_parts=1",key);for(let x of d.results||[]){if(x.is_spare)continue;parts.push(standard({part_num:x.part?.part_num,color_id:x.color?.id,name:(x.part?.name||"")+" · "+(x.color?.name||""),rgb:x.color?.rgb,transparent:x.color?.is_trans,quantity:x.quantity}))}if(!d.next)break;page++}let merged=new Map();for(let p of parts){let k=partId(p),old=merged.get(k);if(old)old.quantity+=p.quantity;else merged.set(k,p)}let previous=data.sets[no];if(previous){for(let p of merged.values()){let old=previous.parts.find(o=>partId(o)===partId(p));if(old)p.got=Math.min(old.got,p.quantity)}}data.sets[no]={name:info.name,parts:[...merged.values()]};data.active=no;save();render();scanSelectedSet();return no}
 $("add").onclick=async()=>{let b=$("add");b.disabled=true;message("Laen Rebrickable detailide nimekirja...");try{let n=await loadSet($("num").value);message("Komplekt "+n+" lisatud koos detailide nimekirjaga.")}catch(e){message(e.message,true)}finally{b.disabled=false}};
 $("addPart").onclick=()=>{let s=current();if(!s)return message("Vali komplekt.",true);let p=standard({part_num:$("part").value,color_id:$("color").value,quantity:$("qty").value});if(!p.part_num)return message("Lisa detaili ID.",true);let old=s.parts.find(x=>partId(x)===partId(p));if(old)old.quantity+=p.quantity;else s.parts.push(p);save();render();$("part").value=""};
 $("inventory").onchange=async e=>{let s=current(),f=e.target.files[0];if(!s||!f)return message("Vali komplekt ja fail.",true);try{let content=await f.text(),parsed=f.name.toLowerCase().endsWith(".json")?JSON.parse(content):csv(content);if(!Array.isArray(parsed))parsed=parsed.parts;if(!Array.isArray(parsed))throw Error("Loend ei ole massiiv");let parts=parsed.map(standard).filter(p=>p.part_num);for(const p of parts){let old=s.parts.find(x=>partId(x)===partId(p));if(old)old.quantity+=p.quantity;else s.parts.push(p)}save();render();message("Imporditud "+parts.length+" kirjet.")}catch(err){message("Import ebaõnnestus: "+err.message,true)}e.target.value=""};
@@ -35,6 +36,7 @@ $("backup").onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text
 function clearPhoto() {
     partScan?.abort();
     scanMessage("");
+    collectedBoxes.clear();
     photoVersion++;
     chosenFile = null;
     data.pins = [];
@@ -67,7 +69,8 @@ async function showPhoto(photo, fromCamera = false) {
         chosenFile = prepared;
         $("photoBlock").classList.remove("hidden");
         message("");
-        void scanParts();
+        if (current()) void scanParts();
+        else scanMessage("Vali komplekt, mille jaoks klotse otsid.");
     } catch (error) {
         if (version === photoVersion) message(error.message, true);
     }
@@ -101,74 +104,111 @@ $("identifySet").onclick = async () => {
         button.disabled = false;
     }
 };
-$("photo").onclick=e=>{if(e.target.closest("button"))return;let r=$("image").getBoundingClientRect();if(!r.width||!r.height)return;let x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;if(x<0||x>1||y<0||y>1)return;data.pins.push({x,y,part:""});save();drawPins()};
 function drawPins() {
     document.querySelectorAll(".pin").forEach(node => node.remove());
-    const set = current();
     const root = $("pins");
     root.replaceChildren();
-    if (!data.pins.length) {
-        root.textContent = "Tuvastatud klotsid ilmuvad siia.";
+    const set = current();
+    if (!set || !photoURL) {
+        root.textContent = "Vali komplekt ja lisa klotsidest foto.";
         return;
     }
-    data.pins.forEach((mark, index) => {
+
+    const remaining = new Map(set.parts.map(part => [partId(part), part.quantity - part.got]));
+    const matches = data.pins.flatMap(mark => {
+        const candidate = mark.candidates?.[0];
+        if (!candidate || candidate.score < 0.55 || !Number.isFinite(candidate.score)) return [];
+        const observed = LEGOPhoto.lab(mark.box.rgb);
+        const colors = set.parts.filter(part => String(part.part_num) === String(candidate.id));
+        if (colors.some(part => !part.rgb)) return [];
+        const ranked = colors.filter(part => !part.transparent).map(part => ({
+            part, distance: LEGOPhoto.colorDistance(observed, part.rgb),
+        })).sort((a, b) => a.distance - b.distance);
+        const [best, next] = ranked;
+        return best && best.distance <= 28 && (!next || next.distance - best.distance >= 5)
+            ? [{ mark, part: best.part, distance: best.distance, score: candidate.score }] : [];
+    }).sort((a, b) => a.distance - b.distance || b.score - a.score);
+
+    let number = 0;
+    for (const { mark, part } of matches) {
+        const key = partId(part);
+        const count = remaining.get(key);
+        if (count <= 0) continue;
+        remaining.set(key, count - 1);
+        number++;
         const row = document.createElement("div");
         row.className = "result";
-        if (photoURL) {
-            const pin = document.createElement("button");
-            pin.className = "pin " + (mark.part ? "ok" : "");
-            pin.style.left = mark.x * 100 + "%";
-            pin.style.top = mark.y * 100 + "%";
-            pin.textContent = index + 1;
-            pin.onclick = () => row.scrollIntoView({behavior:"smooth",block:"center"});
-            $("photo").append(pin);
-        }
-        row.innerHTML = '<strong>Klots ' + (index + 1) + '</strong>'
-            + (mark.note ? '<p class="hint">' + esc(mark.note) + '</p>' : "");
-        root.append(row);
-        if (!set) return;
-        const suggested = new Set(mark.matches || []);
-        const available = set.parts.filter(part => part.got < part.quantity);
-        available.sort((a, b) => Number(suggested.has(partId(b))) - Number(suggested.has(partId(a))));
-        row.insertAdjacentHTML("beforeend", '<select><option value="">Vali komplekti detail…</option>'
-            + available.map(part => '<option value="' + esc(partId(part)) + '"'
-                + (mark.part === partId(part) ? " selected" : "") + '>'
-                + (suggested.has(partId(part)) ? "Võimalik vaste · " : "")
-                + esc(part.part_num) + " · " + esc(part.color_id) + " · " + esc(part.name) + '</option>').join("")
-            + '</select><div class="buttons"><button class="confirm">Märgi kogutuks</button>'
-            + '<button class="secondary remove">Eemalda märk</button></div>');
-        row.querySelector("select").onchange = event => {
-            mark.part = event.target.value;
-            save();
-            drawPins();
-        };
-        row.querySelector(".confirm").onclick = () => {
-            const part = available.find(item => partId(item) === mark.part);
-            if (!part) return message("Vali kõigepealt detail.", true);
+        row.innerHTML = '<strong>' + number + ' · ' + esc(part.name || part.part_num) + '</strong>'
+            + '<p class="hint">Detail ' + esc(part.part_num) + ' · värv ' + esc(part.color_id) + '</p>'
+            + '<button type="button">Märgi kogutuks</button>';
+        row.querySelector("button").onclick = () => {
+            if (set !== current() || !data.pins.includes(mark) || part.got >= part.quantity) return;
             part.got++;
-            data.pins.splice(index, 1);
+            collectedBoxes.add(boxId(mark.box));
+            data.pins = data.pins.filter(item => item !== mark);
             save();
             render();
-            message("Kogutud: " + part.part_num);
+            message("Kogutud: " + (part.name || part.part_num));
         };
-        row.querySelector(".remove").onclick = () => {
-            data.pins.splice(index, 1);
-            save();
-            drawPins();
-        };
-    });
-}
-
-function matchPart(mark) {
-    const ids = new Set((mark.candidates || []).map(candidate => String(candidate.id)));
-    mark.matches = (current()?.parts || []).filter(part => ids.has(String(part.part_num))).map(partId);
-}
-
-function rematchParts() {
-    for (const mark of data.pins) {
-        mark.part = "";
-        matchPart(mark);
+        root.append(row);
+        const pin = document.createElement("button");
+        const { left, top, right, bottom } = mark.box;
+        pin.className = "pin";
+        pin.style.left = left * 100 + "%";
+        pin.style.top = top * 100 + "%";
+        pin.style.width = (right - left) * 100 + "%";
+        pin.style.height = (bottom - top) * 100 + "%";
+        pin.innerHTML = '<span>' + number + '</span>';
+        pin.setAttribute("aria-label", "Vaata vajalikku klotsi " + number);
+        pin.onclick = () => row.scrollIntoView({behavior:"smooth",block:"center"});
+        $("photo").append(pin);
     }
+    if (!number) root.textContent = "Vajalike klotside vasteid veel ei ole.";
+    return number;
+}
+
+async function loadMissingColors(set) {
+    const parts = set.parts.filter(part => !part.rgb && /^\d+$/.test(part.color_id));
+    if (!parts.length) return;
+    const key = $("apiKey").value.trim();
+    if (!key) throw Error("Varem salvestatud komplekti värvide laadimiseks sisesta Rebrickable’i API võti.");
+    if (!colorRequest) {
+        colorRequest = rb("/colors/?page_size=1000", key)
+            .then(result => new Map((result.results || []).map(color => [String(color.id), color])))
+            .catch(error => { colorRequest = null; throw error; });
+    }
+    const colors = await colorRequest;
+    for (const part of parts) {
+        const color = colors.get(String(part.color_id));
+        if (!color?.rgb) continue;
+        part.rgb = color.rgb;
+        part.transparent = color.is_trans;
+    }
+    save();
+}
+
+async function scanSelectedSet() {
+    if (!chosenFile || !current()) return;
+    if (!data.pins.length) {
+        await scanParts();
+        return;
+    }
+    try {
+        await loadMissingColors(current());
+        const count = drawPins();
+        if ($("ai").disabled === false) showMatchCount(count);
+    } catch (error) {
+        scanMessage(error.message, true);
+    }
+}
+
+function boxId({ left, top, right, bottom }) {
+    return [left, top, right, bottom].join(":");
+}
+
+function showMatchCount(count) {
+    scanMessage(count ? "Rohelise kastiga klotsid on valitud komplektis veel puudu."
+        : "Valitud komplektile sobivaid klotse ei leitud.");
 }
 
 function scanMessage(text, error = false) {
@@ -178,6 +218,7 @@ function scanMessage(text, error = false) {
 
 async function scanParts() {
     if (!chosenFile) return;
+    if (!current()) return scanMessage("Vali komplekt, mille jaoks klotse otsid.");
     partScan?.abort();
     const controller = new AbortController();
     partScan = controller;
@@ -185,21 +226,17 @@ async function scanParts() {
     const button = $("ai");
     button.disabled = true;
     try {
+        await loadMissingColors(current());
+        if (signal.aborted) return;
         const image = $("image");
-        const boxes = LEGOPhoto.findParts(image);
-        const marks = boxes.map(box => ({
-            x: (box.left + box.right) / 2,
-            y: (box.top + box.bottom) / 2,
-            part: "",
-            note: "Ootab tuvastust…",
-        }));
+        const boxes = LEGOPhoto.findParts(image).filter(box => !collectedBoxes.has(boxId(box)));
+        const marks = boxes.map(box => ({ box }));
         data.pins = marks.slice();
         drawPins();
         if (!boxes.length) {
             scanMessage("Klotside piirjooni ei leitud. Pildista eraldi laotatud klotse kontrastsel ühevärvilisel taustal.");
             return;
         }
-        let recognized = 0;
         let firstError = "";
         for (const [index, box] of boxes.entries()) {
             const mark = marks[index];
@@ -209,20 +246,15 @@ async function scanParts() {
                 const candidates = await LEGOPhoto.predictPart(image, box, signal);
                 if (signal.aborted) return;
                 mark.candidates = candidates;
-                matchPart(mark);
-                const names = candidates.slice(0, 3).map(candidate => candidate.name || candidate.id);
-                if (names.length) recognized++;
-                mark.note = names.length ? names.join(" / ") : "Tuvastus ei pakkunud ühtegi vastet.";
             } catch (error) {
                 if (signal.aborted) return;
                 firstError ||= error.message;
-                mark.note = error.message;
             }
             drawPins();
         }
-        scanMessage(recognized
-            ? `Leitud ${boxes.length} piirkonda. Võimalikud detailid ${recognized} klotsile. Kontrolli kuju ja värvi.`
-            : firstError || "Leidsin klotside asukohad, kuid tuvastus ei pakkunud vasteid.", !recognized && Boolean(firstError));
+        const count = drawPins();
+        if (firstError) scanMessage("Tuvastuspäring ebaõnnestus. " + firstError, true);
+        else showMatchCount(count);
     } catch (error) {
         if (!signal.aborted) scanMessage(error.message, true);
     } finally {
