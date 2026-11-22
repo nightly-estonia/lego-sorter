@@ -4,7 +4,7 @@ from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 import requests, cv2, numpy as np
 from PIL import Image, ImageOps
-from fastapi import FastAPI, File, Form, UploadFile, HTTPException
+from fastapi import FastAPI, File, Form, Header, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 
 app = FastAPI(title="LEGO Sorter")
@@ -16,6 +16,10 @@ BG = "https://api.brickognize.com/predict/parts/"
 def index():
     return FileResponse(os.path.join(BASE,"static","index.html"))
 
+@app.get("/static/photo.js")
+def photo_script():
+    return FileResponse(os.path.join(BASE, "static", "photo.js"), media_type="application/javascript")
+
 @app.get("/health")
 def health():
     return {"ok":True}
@@ -25,6 +29,7 @@ def rbget(path, key, params=None):
         r=requests.get(RB+path,headers={"Authorization":"key "+key},
                        params=params,timeout=20)
         if r.status_code in (401,403): raise HTTPException(401,"Kontrolli Rebrickable API võtit")
+        if r.status_code==429: raise HTTPException(429,"Rebrickable’i päringulimiit täitus. Proovi veidi hiljem.")
         if r.status_code==404: raise HTTPException(404,"Komplekti ei leitud")
         r.raise_for_status()
         return r.json()
@@ -32,12 +37,16 @@ def rbget(path, key, params=None):
         raise HTTPException(502,"Rebrickable päring ebaõnnestus")
 
 @app.get("/api/set/{number}")
-def get_set(number: str,key: str):
+def get_set(number: str, key: str | None = None, authorization: str = Header("")):
+    if authorization.startswith("key "):
+        key = authorization[4:].strip()
+    if not key:
+        raise HTTPException(401, "Sisesta Rebrickable API võti")
     if not re.fullmatch(r"\d{3,8}(?:-\d+)?",number):
         raise HTTPException(400,"Vigane komplekti number")
     number=number if "-" in number else number+"-1"
     s=rbget("/sets/"+number+"/",key)
-    parts=[]
+    parts={}
     for page in range(1,21):
         data=rbget("/sets/"+number+"/parts/",key,
                    {"page_size":1000,"page":page,"inc_minifig_parts":1})
@@ -45,14 +54,19 @@ def get_set(number: str,key: str):
             if item.get("is_spare"): continue
             p=item.get("part") or {}
             c=item.get("color") or {}
-            parts.append({"part_num":str(p.get("part_num","")),
+            part_id = (str(p.get("part_num", "")), c.get("id"))
+            quantity = item.get("quantity", 1)
+            if part_id in parts:
+                parts[part_id]["quantity"] += quantity
+                continue
+            parts[part_id] = {"part_num":part_id[0],
                           "name":p.get("name",""),"color_id":c.get("id"),
                           "color_name":c.get("name",""),
-                          "quantity":item.get("quantity",1),
-                          "image":p.get("part_img_url")})
+                          "quantity":quantity,
+                          "image":p.get("part_img_url")}
         if not data.get("next"):break
     return {"number":number,"name":s.get("name"),"image":s.get("set_img_url"),
-            "year":s.get("year"),"parts":parts}
+            "year":s.get("year"),"parts":list(parts.values())}
 
 def segment(img):
     rgb=np.array(img.convert("RGB"))
@@ -106,6 +120,8 @@ async def scan(file:UploadFile=File(...),parts:str=Form("[]")):
     if not boxes:return {"detections":[],"message":"Ei leidnud eraldatud klotse. Proovi ühtlast tausta."}
     with ThreadPoolExecutor(max_workers=3) as pool:
         answers=list(pool.map(lambda b:classify(img,b),boxes))
+    if all(error for _, error in answers):
+        raise HTTPException(502, "Brickognize’i tuvastusteenus ei vasta. Proovi uuesti.")
     detections=[]
     for i,(box,(candidates,error)) in enumerate(zip(boxes,answers)):
         matches=[]

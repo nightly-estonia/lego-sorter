@@ -4,14 +4,16 @@ Fotopõhine LEGO City komplektide taastamise veebirakendus.
 
 ## Kasutamine
 
-1. Käivita rakendus.
-2. Sisesta tasuta [Rebrickable API võti](https://rebrickable.com/api/).
-3. Lisa oma LEGO komplekti number (näiteks `60337`).
-4. Laota 5–15 klotsi matile ühevärvilisele alusele, nii et need ei kattuks.
-5. Tee telefoniga foto, vajuta „Skaneeri klotsid” ja kinnita sobivad detailid.
-6. Kogutud osade arv jääb sinu brauseri salvestusse.
+1. Ava rakendus GitHub Pagesis või käivita FastAPI kohalikult.
+2. Vali foto või tee telefoniga pilt karbi esiküljest või valmis mudelist.
+3. Vajuta „Tuvasta komplekt” ja vali Brickognize’i pakutud vastetest sobiv komplekt.
+4. Sisesta [Rebrickable’i API võti](https://rebrickable.com/api/). Pärast komplekti valimist laadib rakendus vajalike detailide loendi koos värvide ja kogustega. Komplekti numbri (näiteks `60337`) saab ka käsitsi sisestada.
+5. Üksikute osade võrdlemiseks laota klotsid üksteisest eraldi. GitHub Pagesis puuduta fotol soovitud klotse ja vajuta „Tuvasta märgitud klotsid”. FastAPI vaates vajuta „Skaneeri klotsid”.
+6. Kontrolli pakutud detaili kuju ja värvi enne kogutuks märkimist. Kogused jäävad brauseri salvestusse.
 
-**Tuvastus on esialgne:** Brickognize pakub detaili kuju kandidaate ning süsteem võrdleb neid Rebrickable nimekirjaga. Värvi ja täpset vastet tuleb käsitsi kontrollida. Äpp ei erista identsete klotside algset päritolu.
+Komplekti tuvastus annab võimalikud vasted. Lahtiste klotside või nummerdamata koti pildistamisel kasuta teadaolevat komplekti numbrit ja võrdle üksikuid klotse selle loendiga. Kui brauser ei suuda HEIC-fotot avada, proovi JPG- või PNG-faili.
+
+Tuvastamisel saadetakse töödeldud foto Brickognize’ile. Rebrickable’i võti sisestatakse rakenduses ja säilib brauseris. GitHub Pages saadab võtme otse Rebrickable’ile ja FastAPI vaade vahendab päringu oma serveri kaudu.
 
 ## Kohalik käivitamine
 
@@ -26,4 +28,4 @@ Ava `http://localhost:8000`.
 
 Loo [Renderis](https://dashboard.render.com/) uus **Blueprint** ja ühenda GitHubi hoidla `nightly-estonia/lego-sorter`. Render loeb `render.yaml` faili ning käivitab FastAPI veebiserveri. Tasuta teenuse plaani olemasolu ja tingimused sõltuvad Renderi hinnakirjast.
 
-See ei ole veel reaalajas videopildi AR-rakendus, vaid fotopõhine prototüüp. Pildid saadetakse tuvastamiseks Brickognize API-le. Olemasolevas versioonis pole kasutajakontosid ega serveris pikaajalist kogumise salvestust.
+Kogumise andmed salvestatakse selle brauseri ja saidi jaoks.
