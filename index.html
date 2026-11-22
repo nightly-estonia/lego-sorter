@@ -6,8 +6,8 @@
 <body><main><header><strong><b>▦</b> LEGO SORTER</strong><small>GITHUB PAGES</small></header><h1>Leia õige klots.<br>Taasta oma komplekt.</h1><p class="muted">Vali komplekt, lisa detailide loend, pildista klotse ja märgi sobivad osad. Andmed säilivad sinu telefoni brauseris.</p>
 <div class="layout"><aside><section class="panel"><h2><span class="step">1</span> Komplektid</h2><label>Rebrickable API võti</label><input id="apiKey" type="password" placeholder="Tasuta API võti"><p class="hint">Võtme saad <a href="https://rebrickable.com/api/" target="_blank" rel="noopener">Rebrickable API lehelt</a>. Seda ei avaldata GitHubis.</p><label>Komplekti number</label><input id="num" inputmode="numeric" placeholder="60337"><label>Komplekti nimi (valikuline)</label><input id="title" placeholder="Reisirong"><div class="buttons"><button id="add">Laadi komplekt ja detailid</button><button class="secondary" id="export">Varunda</button></div><div id="sets"></div><label>Taasta varukoopia</label><input id="backup" type="file" accept=".json,application/json"></section>
 <section class="panel"><h2><span class="step">2</span> Detailid</h2><div id="summary" class="hint">Vali komplekt.</div><label>Impordi detailide nimekiri (CSV / JSON)</label><input id="inventory" type="file" accept=".csv,.json,text/csv,application/json"><p class="hint">CSV veerud: part_num, color_id, quantity, name. Rebrickable'i CSV Part, Color, Quantity on samuti sobiv.</p><label>Lisa detail käsitsi</label><input id="part" placeholder="Klotsi number / ID"><label>Värv</label><input id="color" placeholder="Värvi number või nimi"><label>Kogus</label><input id="qty" type="number" min="1" value="1"><div class="buttons"><button id="addPart">Lisa detail</button></div><div class="scroll" id="parts"></div></section></aside>
-<section><div class="panel"><h2><span class="step">3</span> Pildista</h2><p class="hint">Komplekti otsimiseks pildista karbi esikülge või valmis mudelit. Üksikute klotside otsimiseks laota klotsid laiali ja puuduta fotol soovitud klotse.</p><div class="buttons"><label class="upload" style="flex:1;margin:0">📁 Vali foto<input id="file" type="file" accept="image/*"></label><label class="upload" style="flex:1;margin:0">📷 Tee foto<input id="camera" type="file" accept="image/*" capture="environment"></label></div><div id="photoBlock" class="hidden"><div class="photo" id="photo"><img id="image" alt="Klotside foto"></div><div class="buttons"><button id="clear" class="secondary">Eemalda foto</button><button id="ai" class="secondary">Tuvasta märgitud klotsid</button><button id="identifySet">Tuvasta komplekt</button></div></div><div id="setMatches" class="buttons"></div><p class="hint">Tuvastamiseks saadetakse pilt Brickognize’ile.</p><p id="status" class="status" aria-live="polite"></p></div><div class="panel"><h2>Fotole märgitud detailid</h2><div id="pins" class="hint">Puuduta fotot ja vali sobiv detail.</div></div></section></div></main>
-<script src="static/photo.js"></script>
+<section><div class="panel"><h2><span class="step">3</span> Pildista</h2><p class="hint">Komplekti otsimiseks pildista karbi esikülge või valmis mudelit. Üksikute klotside otsimiseks laota klotsid laiali ja puuduta fotol soovitud klotse.</p><div class="buttons"><label class="upload" style="flex:1;margin:0">📁 Vali foto<input id="file" type="file" accept="image/*"></label><button type="button" id="camera" class="secondary">Tee foto</button></div><div id="cameraPreview" class="hidden"><video id="cameraVideo" autoplay muted playsinline aria-label="Kaamera eelvaade" style="display:block;width:100%;max-height:65vh"></video><div class="buttons"><button type="button" id="takePhoto" disabled>Pildista</button><button type="button" id="closeCamera" class="secondary">Sulge kaamera</button></div></div><div id="photoBlock" class="hidden"><div class="photo" id="photo"><img id="image" alt="Klotside foto"></div><div class="buttons"><button id="clear" class="secondary">Eemalda foto</button><button id="ai" class="secondary">Tuvasta märgitud klotsid</button><button id="identifySet">Tuvasta komplekt</button></div></div><div id="setMatches" class="buttons"></div><p class="hint">Tuvastamiseks saadetakse pilt Brickognize’ile.</p><p id="status" class="status" aria-live="polite"></p></div><div class="panel"><h2>Fotole märgitud detailid</h2><div id="pins" class="hint">Puuduta fotot ja vali sobiv detail.</div></div></section></div></main>
+<script src="static/photo.js?v=2"></script>
 <script>
 const $=id=>document.getElementById(id),STORE="lego_sorter_pages_v1";
 let data;try{data=JSON.parse(localStorage.getItem(STORE))}catch(e){}
@@ -47,12 +47,15 @@ function clearPhoto() {
 async function loadPhoto(event) {
     const file = event.target.files[0];
     event.target.value = "";
-    if (!file) return;
+    if (file) await showPhoto(file);
+}
+
+async function showPhoto(photo, fromCamera = false) {
     clearPhoto();
     const version = photoVersion;
     message("Avan fotot…");
     try {
-        const prepared = await LEGOPhoto.prepare(file);
+        const prepared = fromCamera ? photo : await LEGOPhoto.prepare(photo);
         if (version !== photoVersion) return;
         photoURL = URL.createObjectURL(prepared);
         $("image").src = photoURL;
@@ -66,8 +69,11 @@ async function loadPhoto(event) {
     }
 }
 
-$("file").onchange = loadPhoto;
-$("camera").onchange = loadPhoto;
+const stopCamera = LEGOPhoto.bindCamera($, photo => showPhoto(photo, true), message);
+$("file").onchange = event => {
+    if (event.target.files.length) stopCamera();
+    return loadPhoto(event);
+};
 $("clear").onclick = () => { clearPhoto(); message(""); };
 $("identifySet").onclick = async () => {
     if (!chosenFile) return;

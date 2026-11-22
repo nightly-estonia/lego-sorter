@@ -1,6 +1,83 @@
 "use strict";
 
 const LEGOPhoto = {
+    bindCamera(find, onPhoto, notify) {
+        const open = find("camera");
+        const preview = find("cameraPreview");
+        const video = find("cameraVideo");
+        const capture = find("takePhoto");
+        let stream;
+        let session = 0;
+
+        function stop() {
+            session++;
+            stream?.getTracks().forEach(track => track.stop());
+            stream = undefined;
+            video.srcObject = null;
+            preview.classList.add("hidden");
+            open.disabled = false;
+            capture.disabled = true;
+        }
+
+        open.onclick = async () => {
+            if (!navigator.mediaDevices?.getUserMedia) {
+                notify("Kaamera avamiseks kasuta HTTPS-lehte või brauserit, mis toetab kaamerat.", true);
+                return;
+            }
+            const attempt = ++session;
+            open.disabled = true;
+            preview.classList.remove("hidden");
+            notify("Kaamera avamiseks luba brauseril kaamerat kasutada.");
+            try {
+                const requested = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { ideal: "environment" } },
+                    audio: false,
+                });
+                if (attempt !== session) {
+                    requested.getTracks().forEach(track => track.stop());
+                    return;
+                }
+                stream = requested;
+                video.srcObject = stream;
+                await video.play();
+                if (attempt !== session) return;
+                capture.disabled = false;
+                notify("Kadreeri foto ja vajuta „Pildista”.");
+            } catch (error) {
+                if (attempt !== session) return;
+                stop();
+                const messages = {
+                    NotAllowedError: "Kaamera kasutamine on keelatud. Luba see brauseri saidiseadetes.",
+                    NotFoundError: "Brauser ei leidnud kaamerat.",
+                    NotReadableError: "Kaamera on hõivatud või sellele ei pääse ligi.",
+                };
+                notify(messages[error.name] || "Kaamerat ei õnnestunud avada. Proovi uuesti.", true);
+            }
+        };
+
+        capture.onclick = async () => {
+            const attempt = session;
+            const { videoWidth: width, videoHeight: height } = video;
+            if (!stream || !width || !height) return;
+            capture.disabled = true;
+            try {
+                const scale = Math.min(1, 1600 / Math.max(width, height));
+                const photo = await this.jpeg(video, 0, 0, width, height, scale);
+                if (attempt !== session) return;
+                stop();
+                await onPhoto(photo);
+            } catch (error) {
+                if (attempt !== session) return;
+                capture.disabled = false;
+                notify(error.message, true);
+            }
+        };
+
+        find("closeCamera").onclick = () => { stop(); notify(""); };
+        window.addEventListener("pagehide", stop);
+        return stop;
+    },
+
     async prepare(file) {
         const url = URL.createObjectURL(file);
         const image = new Image();
